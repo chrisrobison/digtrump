@@ -1,0 +1,6 @@
+SheetWidth = 1536
+SheetHeight = 1024
+SpriteWidth = 256
+SpriteHeight = 256
+AnimationFrames = 6
+AngularViews = 4

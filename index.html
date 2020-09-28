@@ -256,24 +256,6 @@ body,h1,h2,h3,h4,h5,ul,li,p,div,span,table,td,tr,thead,tbody,hr,blockquote,code,
 <table id='board'>
 <tbody>
 <?php
-    $s = 0;
-    for ($r=0; $r<12; $r++) {
-        print "<tr>";
-        $soil = "soil" . $s;
-
-        if ($r == 2) {
-            $s++;
-        } else if ($r == 5) {
-            $s++;
-        } else if ($r == 8) {
-            $s++;
-        }
-         
-        for ($c=0; $c<21; $c++) {
-            print "<td class='square $soil ' id='r{$r}c{$c}'> </td>";
-        }
-        print "</tr>\n";
-    }
 ?>
 </tbody>
 </table>
@@ -296,6 +278,62 @@ body,h1,h2,h3,h4,h5,ul,li,p,div,span,table,td,tr,thead,tbody,hr,blockquote,code,
         },
         objects: {},
         firing: 0,
+        init: function() {
+            const tbody = document.querySelector("table#board tbody");
+            if (tbody) {
+                var s = 0, out = '';
+                for (var r=0; r<12; r++) {
+                    out += "<tr>";
+                    soil = "soil" + s;
+
+                    if ((r == 2) || (r==5) || (r==8)) {
+                        s++;
+                    }
+                    
+                    for (var c=0; c<21; c++) {
+                        out += "<td class='square " + soil + "' id='r" + r + "c" + c + "'> </td>";
+                    }
+                    out += "</tr>";
+                }
+                tbody.innerHTML = out;
+                
+            }
+            var safe = [];
+            safe[0] = document.querySelector('#r9c19');
+            safe[1] = document.querySelector('#r9c20');
+            safe[2] = document.querySelector('#r10c19');
+            safe[3] = document.querySelector('#r10c20');
+            
+            document.querySelector("#board").style.height = (window.innerHeight - 90) + 'px';
+            safe.forEach((item) => {
+                item.className += ' safe';
+            });
+            
+            placeObjects('burger', 5, 10);
+            placeObjects('fries', 5, 10);
+            placeObjects('soda', 5, 10);
+            
+            const head = document.querySelector(".sky");
+            for (var i=0; i<20; i++) {
+                var img = new Image();
+                img.src = "protester" + (Math.floor(Math.random()*6) + 1) + ".gif";
+                img.className = "protester";
+                var left = 200 + (Math.floor(Math.random() * (window.innerWidth - 400) ));
+                if ((left > 650) && (left < 900)) {
+                    if ((left - 650) < 150) {
+                        left = left - 200;
+                    } else {
+                        left = left + 200;
+                    }
+                    console.log("Moved protester from " + (left + 200) + " to " + left);
+                    console.dir(img);
+                }
+                img.style.left = left + 'px';
+                
+                head.appendChild(img);
+            }
+
+        },
         fire: function(dir) {
             var tweet = new Image();
             tweet.className = 'tweet';
@@ -463,42 +501,6 @@ body,h1,h2,h3,h4,h5,ul,li,p,div,span,table,td,tr,thead,tbody,hr,blockquote,code,
 
     }
 
-    function init() {
-        var safe = [];
-        safe[0] = document.querySelector('#r9c19');
-        safe[1] = document.querySelector('#r9c20');
-        safe[2] = document.querySelector('#r10c19');
-        safe[3] = document.querySelector('#r10c20');
-        
-        document.querySelector("#board").style.height = (window.innerHeight - 90) + 'px';
-        safe.forEach((item) => {
-            item.className += ' safe';
-        });
-        
-        placeObjects('burger', 5, 10);
-        placeObjects('fries', 5, 10);
-        placeObjects('soda', 5, 10);
-        
-        const head = document.querySelector(".sky");
-        for (var i=0; i<20; i++) {
-            var img = new Image();
-            img.src = "protester" + (Math.floor(Math.random()*6) + 1) + ".gif";
-            img.className = "protester";
-            var left = 200 + (Math.floor(Math.random() * (window.innerWidth - 400) ));
-            if ((left > 650) && (left < 900)) {
-                if ((left - 650) < 150) {
-                    left = left - 200;
-                } else {
-                    left = left + 200;
-                }
-                console.log("Moved protester from " + (left + 200) + " to " + left);
-                console.dir(img);
-            }
-            img.style.left = left + 'px';
-            
-            head.appendChild(img);
-        }
-    }
     function changeSpeed(newspeed)  {
         sprites.run.style.display = 'none';
         sprites.idle.style.display = 'none';
@@ -524,7 +526,7 @@ body,h1,h2,h3,h4,h5,ul,li,p,div,span,table,td,tr,thead,tbody,hr,blockquote,code,
             who.className += " " + add;
         }
     }
-    init();
+    game.init();
 })();
 </script>
 </body>
